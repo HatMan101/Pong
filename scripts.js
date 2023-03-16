@@ -170,12 +170,21 @@ function update(){
     }
 }
 
+
+window.addEventListener("load", function start_load() {
+    document.getElementById("h1Start").innerHTML = "start";
+
+    window.addEventListener("click", function () {
+
+        // Loop
+        const framePerSecond = 60;
+        setInterval(game, 1000/framePerSecond);
+    })
+})
+
+
 // Game init
 function game(){
     update();
     render();
 }
-
-// Loop
-const framePerSecond = 60;
-setInterval(game, 1000/framePerSecond);
