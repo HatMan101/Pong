@@ -2,6 +2,8 @@
 // Hittar canvasen
 const cvs = document.getElementById("pong");
 const ctx = cvs.getContext("2d");
+const startButton = document.getElementById("h1Start");
+
 
 // Skapar användare paddel
 const user = {
@@ -172,14 +174,16 @@ function update(){
 
 
 window.addEventListener("load", function start_load() {
-    document.getElementById("h1Start").innerHTML = "start";
+    drawRect(0, 0, cvs.width, cvs.height, "black");
+    drawText(startButton.innerHTML = "start", 0, 0, "white");
 
-    window.addEventListener("click", function () {
-
-        // Loop
+    startButton.onclick = function() {
         const framePerSecond = 60;
         setInterval(game, 1000/framePerSecond);
-    })
+        
+        if (startButton.style.display === "none") { startButton.style.display = "block"; }
+        else { startButton.style.display = "none"; }
+    }
 })
 
 
