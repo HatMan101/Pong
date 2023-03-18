@@ -2,7 +2,6 @@
 // Hittar canvasen
 const cvs = document.getElementById("pong");
 const ctx = cvs.getContext("2d");
-const startButton = document.getElementById("h1Start");
 
 
 // Skapar användare paddel
@@ -45,7 +44,7 @@ const net = {
 const rectText = {
     x: cvs.width/2 - 70,
     y: cvs.height/2 - 60,
-    w: 70,
+    w: 115,
     h: 60
 }
 
