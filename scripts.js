@@ -41,11 +41,17 @@ const net = {
     color : "white"
 }
 // StartBox
-const rectText = {
-    x: cvs.width/2 - 70,
-    y: cvs.height/2 - 60,
-    w: 115,
+const rectTextSingle = {
+    x: cvs.width/2 - 155,
+    y: cvs.height/2 - 100,
+    w: 310,
     h: 60
+}
+const rectTextMulti = {
+    x: cvs.width/2 - 143,
+    y: cvs.height/2 + 10,
+    w: 287,
+    h: 50
 }
 
 
@@ -78,7 +84,7 @@ function drawText(text, x,y,color){
     ctx.fillText(text,x,y);
 }
 
-
+// Renderar alla komponenter
 function render(){
     // Gör rent canvas
     drawRect(0, 0, cvs.width, cvs.height, "black");
@@ -96,13 +102,6 @@ function render(){
 
     // Ritar bollen
     drawCircle(ball.x, ball.y, ball.radius, ball.color)
-}
-
-// Kontrollera användarens paddel
-cvs. addEventListener("mousemove", movePaddle);
-function movePaddle(evt){
-    let rect = cvs.getBoundingClientRect();
-    user.y = evt.clientY - rect.top - user.height/2;
 }
 
 
@@ -130,21 +129,22 @@ function resetBall(){
     ball.velocityX = -ball.velocityX
 }
 
-// update stats etc
+// En simpel AI som styr com paddlen
+function aiBot() {
+    let computerLevel = 0.07;
+    com.y += (ball.y - (com.y + com.height/2)) * computerLevel;
+}
+
+// update stats, collitions etc
 function update(){
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
-
-    // En simpel AI som styr com paddlen
-    let computerLevel = 0.07;
-    com.y += (ball.y - (com.y + com.height/2)) * computerLevel;
 
     if (ball.y + ball.radius > cvs.height || ball.y - ball.radius < 0){
         ball.velocityY = -ball.velocityY;
     }
 
     let player = (ball.x < cvs.width/2) ? user : com;
-
     if (collision(ball,player)){
         // Bestämmer vart bollen träffar paddlen
         let collidePoint = ball.y - (player.y + player.height/2)
@@ -178,40 +178,56 @@ function update(){
 }
 
 
-// Game init
-function game(){
+// Game singleplayer init
+function gameSp() {
     update();
     render();
+    aiBot()
 }
+function gameMp() {
+    update()
+    render()
+}
+
 
 // Laddar start och canvas
 window.addEventListener("load", function start_load() {
     drawRect(0, 0, cvs.width, cvs.height, "black");
-    drawText("start", rectText.x, rectText.y + 60, "white");
-
+    drawText("singleplayer", rectTextSingle.x, rectTextSingle.y + 60, "white");
+    drawText("multiplayer", rectTextMulti.x, rectTextMulti.y + 50, "white");
 })
 
 // Checkar mouse pos
+cvs.addEventListener("mousemove", getMousePos);
 function getMousePos(e) {
     let r = cvs.getBoundingClientRect();
+    user.y = e.clientY - r.top - user.height/2;
     return {
         x: e.clientX - r.left,
         y: e.clientY - r.top
     };
 }
 
+
 // Om mus är inom en pos(start text), starta spelet
 cvs.addEventListener('click', checkStart, false);
 function checkStart(e) {
+    const framePerSecond = 60;
     let p = getMousePos(e);
+    let go = true;
 
-    if (p.x >= rectText.x && p.x <= rectText.x + rectText.w &&
-        p.y >= rectText.y && p.y <= rectText.y + rectText.h) {
+    if (p.x >= rectTextSingle.x && p.x <= rectTextSingle.x + rectTextSingle.w &&
+        p.y >= rectTextSingle.y && p.y <= rectTextSingle.y + rectTextSingle.h) {
 
-        let go = true;
         if (go === true) {
-            const framePerSecond = 60;
-            setInterval(game, 1000 / framePerSecond);
+            setInterval(gameSp, 1000 / framePerSecond);
+        }
+    }
+    else if ((p.x >= rectTextMulti.x && p.x <= rectTextMulti.x + rectTextMulti.w &&
+        p.y >= rectTextMulti.y && p.y <= rectTextMulti.y + rectTextMulti.h) ) {
+
+        if (go === true) {
+            setInterval(gameMp, 1000 / framePerSecond);
         }
     }
 }
