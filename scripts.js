@@ -41,7 +41,13 @@ const net = {
     height : 10,
     color : "white"
 }
-
+// StartBox
+const rectText = {
+    x: cvs.width/2 - 70,
+    y: cvs.height/2 - 60,
+    w: 70,
+    h: 60
+}
 
 
 // Ritar rect funktion
@@ -173,22 +179,40 @@ function update(){
 }
 
 
-window.addEventListener("load", function start_load() {
-    drawRect(0, 0, cvs.width, cvs.height, "black");
-    drawText(startButton.innerHTML = "start", 0, 0, "white");
-
-    startButton.onclick = function() {
-        const framePerSecond = 60;
-        setInterval(game, 1000/framePerSecond);
-        
-        if (startButton.style.display === "none") { startButton.style.display = "block"; }
-        else { startButton.style.display = "none"; }
-    }
-})
-
-
 // Game init
 function game(){
     update();
     render();
+}
+
+// Laddar start och canvas
+window.addEventListener("load", function start_load() {
+    drawRect(0, 0, cvs.width, cvs.height, "black");
+    drawText("start", rectText.x, rectText.y + 60, "white");
+
+})
+
+// Checkar mouse pos
+function getMousePos(e) {
+    let r = cvs.getBoundingClientRect();
+    return {
+        x: e.clientX - r.left,
+        y: e.clientY - r.top
+    };
+}
+
+// Om mus är inom en pos(start text), starta spelet
+cvs.addEventListener('click', checkStart, false);
+function checkStart(e) {
+    let p = getMousePos(e);
+
+    if (p.x >= rectText.x && p.x <= rectText.x + rectText.w &&
+        p.y >= rectText.y && p.y <= rectText.y + rectText.h) {
+
+        let go = true;
+        if (go === true) {
+            const framePerSecond = 60;
+            setInterval(game, 1000 / framePerSecond);
+        }
+    }
 }
