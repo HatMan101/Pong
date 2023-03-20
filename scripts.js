@@ -14,7 +14,7 @@ const user = {
     score: 0,
     upkey: false,
     downKey: false,
-    speed: 3.3,
+    speed: 3,
     velocityY: 0,
     friction: 0.8
 }
@@ -28,7 +28,7 @@ const com = {
     score: 0,
     upkey: false,
     downKey: false,
-    speed: 3.3,
+    speed: 3,
     velocityY: 0,
     friction: 0.8
 }
